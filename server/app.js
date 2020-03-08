@@ -10,7 +10,7 @@ const blogPostsRouter = require('./controllers/blogPosts');
 console.log('Connecting to MongoDB ---');
 
 mongoose
-  .connect(config.MONGODB_URI, { useNewUrlParser: true })
+  .connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connection successful'))
   .catch(err => console.log('Connection error', err.message));
 
