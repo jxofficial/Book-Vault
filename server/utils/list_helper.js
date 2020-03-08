@@ -5,7 +5,15 @@ const calculateTotalLikes = blogPosts => {
   return blogPosts.map(post => post.likes).reduce((acc, cur) => acc + cur, 0);
 }
 
+const getFavouritePosts = blogPosts => {
+  if (blogPosts.length === 0) return [];
+  const postLikesList = blogPosts.map(post => post.likes);
+  const maxNumLikes = Math.max(...postLikesList);
+  return blogPosts.filter(post => post.likes === maxNumLikes);
+}
+
 module.exports = {
   dummyFunction,
-  calculateTotalLikes
+  calculateTotalLikes,
+  getFavouritePosts
 }
