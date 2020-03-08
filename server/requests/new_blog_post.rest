@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blog
+Content-Type: application/json
+
+{
+  "title": "A Classic Fairytale Story",
+  "author": "Anthony Berger",
+  "url": "goodreads.com/anthony-berger/book1",
+  "likes": 111
+}
