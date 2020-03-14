@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
-const app = require('../app'); 
+const app = require('../app');
 const BlogPost = require('../models/blogPost');
 
 const api = supertest(app);
@@ -33,7 +33,27 @@ test('get request returns correct number of posts', async () => {
     .get('/api/blogposts')
     .expect(200)
     .expect('Content-Type', /application\/json/);
-  expect(result.body).toHaveLength(initialPosts.length); 
+  expect(result.body).toHaveLength(initialPosts.length);
+});
+
+test('post request adds correct post successfully', async () => {
+  const postToAdd = new BlogPost({
+    title: 'The Killing Kind',
+    author: 'Chris Holm',
+    url: 'https://www.goodreads.com/book/show/24396847-the-killing-kind',
+    likes: 1317
+  });
+
+  await api
+    .post('/api/blog')
+    .send(postToAdd)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const updatedPosts = await BlogPost.find({});
+  const titles = updatedPosts.map(post => post.title);
+  expect(updatedPosts).toHaveLength(initialPosts.length + 1);
+  expect(titles).toContain(postToAdd.title);
 });
 
 afterAll(() => mongoose.connection.close());

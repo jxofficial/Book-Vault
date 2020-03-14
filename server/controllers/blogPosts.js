@@ -7,7 +7,7 @@ blogPostsRouter.get('/blogposts', async (req, resp) =>  {
   return resp.json(parsedPosts);
 });
 
-blogPostsRouter.post('/blog', (req, resp) => {
+blogPostsRouter.post('/blog', async (req, resp) => {
   const body = req.body;
   
   const blogPost = new BlogPost({
@@ -17,9 +17,8 @@ blogPostsRouter.post('/blog', (req, resp) => {
     likes: body.likes
   });
 
-  blogPost
-    .save()
-    .then(result => resp.status(201).json(result.toJSON()));
+  const result = await blogPost.save();
+  resp.status(201).json(result.toJSON());
 });
 
 module.exports = blogPostsRouter; 
