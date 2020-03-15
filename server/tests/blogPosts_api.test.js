@@ -45,18 +45,35 @@ test('post request adds correct post with status 201', async () => {
 
 test('returns 204 status code for successful delete request', async () => {
   const posts = await helper.getAllPostsFromDB();
-  const noteToBeDeleted = posts[0];
-  const idOfFirstPost = noteToBeDeleted.id; 
+  const postToBeDeleted = posts[0];
 
   await api
-    .delete(`/api/blogposts/${idOfFirstPost}`)
+    .delete(`/api/blogposts/${postToBeDeleted.id}`)
     .expect(204);
-  
+
   const updatedPosts = await helper.getAllPostsFromDB();
   const titlesOfUpdatedPosts = updatedPosts.map(post => post.title);
 
   expect(updatedPosts).toHaveLength(helper.initialPosts.length - 1);
-  expect(titlesOfUpdatedPosts).not.toContain(noteToBeDeleted.title)
+  expect(titlesOfUpdatedPosts).not.toContain(postToBeDeleted.title)
 });
+
+test('successful update of likes returns 200 status code', async () => {
+  const posts = await helper.getAllPostsFromDB();
+  const postToBeUpdated = posts[0];
+  const NEW_LIKES = 999999;
+
+  const updatedPost = { postToBeUpdated, likes: NEW_LIKES }
+
+  await api
+    .put(`/api/blogposts/${postToBeUpdated.id}`)
+    .send(updatedPost)
+    .expect(200);
+
+  const updatedPostsFromDB = await helper.getAllPostsFromDB();
+  const updatedLikesOfPost = updatedPostsFromDB.map(post => post.likes)[0];
+  expect(updatedLikesOfPost).toBe(NEW_LIKES);
+});
+
 
 afterAll(() => mongoose.connection.close());
