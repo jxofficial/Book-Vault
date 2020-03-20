@@ -3,7 +3,13 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   username: String,
   passwordHash: String, 
-  name: String
+  name: String, 
+  blogPosts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'BlogPost' // references documents from the blogpost collection
+    }
+  ]
 });
 
 userSchema.set('toJSON', {

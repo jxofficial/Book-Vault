@@ -4,7 +4,11 @@ const blogPostSchema = mongoose.Schema({
   title: String, 
   author: String,
   url: String, 
-  likes: Number
+  likes: Number, 
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User' // references documents from the user collection
+  }
 });
 
 const BlogPost = mongoose.model('BlogPost', blogPostSchema);

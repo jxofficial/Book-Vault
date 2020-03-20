@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blog
+Content-Type: application/json
+
+{
+  "title": "Blue Moon",
+  "author": "Lee Child",
+  "url": "https://www.goodreads.com/book/show/43662365-blue-moon",
+  "likes": 29881
+}
