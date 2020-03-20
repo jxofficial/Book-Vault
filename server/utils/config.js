@@ -9,5 +9,5 @@ if (process.env.NODE_ENV === 'test') {
 
 module.exports = {
   PORT,
-  MONGODB_URI
+  MONGODB_URI,
 }

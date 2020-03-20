@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const config = require('./utils/config');
 const blogPostsRouter = require('./controllers/blogPosts');
 const usersRouter = require('./controllers/users');
+const loginRouter = require('./controllers/login');
 
 console.log('Connecting to MongoDB ---');
 
@@ -20,5 +21,6 @@ app.use(bodyParser.json());
 
 app.use('/api/', blogPostsRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/login', loginRouter);
 
 module.exports = app; 
