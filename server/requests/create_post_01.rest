@@ -1,5 +1,6 @@
 POST http://localhost:3003/api/blog
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG50aGV3aWNrZWQiLCJpZCI6IjVlNzM1OGI3NmU5YTdlMDdmNDY0OGM0MSIsImlhdCI6MTU4NDc3OTkxN30.iuJMQ-Z1n0hYrFnCJ7H7s1VYb6649GQpANjC-8XrOeU
 
 {
   "title": "Rain Will Come",

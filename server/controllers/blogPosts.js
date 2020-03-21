@@ -21,7 +21,7 @@ blogPostsRouter.post('/blog', async (req, resp) => {
     next(exception);
   }
   
-  const user = await User.findById(decodedToken.id); // returns a random user document;
+  const user = await User.findById(decodedToken.id);
 
   const blogPost = new BlogPost({
     title: body.title,
@@ -38,12 +38,29 @@ blogPostsRouter.post('/blog', async (req, resp) => {
 });
 
 blogPostsRouter.delete('/blogposts/:id', async (req, resp, next) => {
-  const id = req.params.id;
+  const blogPostId = req.params.id;
+  let postToDelete;
   try {
-    await BlogPost.findByIdAndDelete(id);
-    resp.status(204).end();
+    postToDelete = await BlogPost.findById(blogPostId);
   } catch (exception) {
     next(exception);
+  }
+
+  const token = req.body.token;
+  if (!token) return resp.status(401).json({error: 'Token missing'});
+  
+  let decodedToken;
+  try {
+    decodedToken = jwt.verify(token, process.env.TOKEN_PRIVATE_KEY);
+  } catch (exception) {
+    next(exception);
+  }
+
+  if (postToDelete.user.toString() === decodedToken.id.toString()) {
+    await BlogPost.findByIdAndDelete(blogPostId);
+    resp.status(204).end();
+  } else {
+    resp.status(401).json({error: 'Only user who posted the post can delete the post'});
   }
 });
 
