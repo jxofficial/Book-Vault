@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blog
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5pY29vb29sYV9yaWNvbGEiLCJpZCI6IjVlNzM1YjEzZjYzY2I2MDY1ODYwMjk1NyIsImlhdCI6MTU4NDc3NTUyNH0._y6n_6Zt7nhJZ39DXc-NB9Du9VlYvMUI0wM2MyDPwSg
+
+{
+  "title": "JavaScript: The Good Parts",
+  "author": "Douglas Crockford",
+  "url": "https://www.goodreads.com/book/show/2998152-javascript",
+  "likes": 7737
+}
