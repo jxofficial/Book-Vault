@@ -3,15 +3,6 @@ const BlogPost = require('../models/blogPost');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 
-const getTokenFromReqHeader = req => {
-  const authorizationStr = req.get('authorization'); // gets the  request authorization header field
-  if (authorizationStr && authorizationStr.toLowerCase().startsWith('bearer ')) {
-    return authorizationStr.substring(7);
-  } else {
-    return null;
-  }
-}
-
 blogPostsRouter.get('/blogposts', async (req, resp, next) => {
   const documents = await BlogPost.find({}).populate('user', { username: 1, name: 1});
   const parsedPosts = documents.map(doc => doc.toJSON());
@@ -20,7 +11,7 @@ blogPostsRouter.get('/blogposts', async (req, resp, next) => {
 
 blogPostsRouter.post('/blog', async (req, resp) => {
   const body = req.body;
-  const token = getTokenFromReqHeader(req);
+  const token = body.token;
   if (!token) return resp.status(401).json({error: 'Token missing'});
   let decodedToken; 
 
