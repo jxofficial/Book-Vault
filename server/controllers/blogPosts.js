@@ -9,7 +9,7 @@ blogPostsRouter.get('/blogposts', async (req, resp, next) => {
   return resp.json(parsedPosts);
 });
 
-blogPostsRouter.post('/blog', async (req, resp) => {
+blogPostsRouter.post('/blog', async (req, resp, next) => {
   const body = req.body;
   const token = body.token;
   if (!token) return resp.status(401).json({error: 'Token missing'});
@@ -20,7 +20,7 @@ blogPostsRouter.post('/blog', async (req, resp) => {
   } catch (exception) {
     next(exception);
   }
-  
+
   const user = await User.findById(decodedToken.id);
 
   const blogPost = new BlogPost({
