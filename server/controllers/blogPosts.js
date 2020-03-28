@@ -9,6 +9,24 @@ blogPostsRouter.get('/blogposts', async (req, resp, next) => {
   return resp.json(parsedPosts);
 });
 
+blogPostsRouter.get('/blogposts/:username', async (req, resp, next) => {
+  const username = req.params.username;
+  const user = await User.find({username});
+  console.log(user);
+  const documents = 
+    await BlogPost
+      .find({user})
+      .populate('user', {
+        username: 1,
+        name: 1
+      });
+  
+  const parsedPosts = documents.map(doc => doc.toJSON());
+  resp.json(parsedPosts);
+});
+
+
+
 blogPostsRouter.post('/blog', async (req, resp, next) => {
   const body = req.body;
   const token = body.token;

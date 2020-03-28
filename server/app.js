@@ -19,6 +19,7 @@ mongoose
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(middlewares.requestLogger);
 app.use(middlewares.tokenExtractor);
 
 app.use('/api/', blogPostsRouter);

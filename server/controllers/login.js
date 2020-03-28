@@ -14,14 +14,18 @@ loginRouter.post('/', async (req, resp) => {
     return resp.status(401).json({error: 'Invalid username or password'});
   }
 
+  // token signing only occurs when password is correct
   const userForTokenSigning = {
     username: user.username,
     id: user._id
   }
-
   const token = await jwt.sign(userForTokenSigning, process.env.TOKEN_PRIVATE_KEY);
 
-  resp.json({token, username: user.username});
+  resp.json({
+    token, 
+    username: user.username,
+    name: user.name
+  });
 });
 
 module.exports = loginRouter;
