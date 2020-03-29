@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import Login from './components/Login';
 import BlogPost from './components/BlogPost';
 import BlogPostForm from './components/BlogPostForm';
+import ErrorNotification from './components/ErrorNotification';
+import SuccessNotification from './components/SuccessNotification';
 import loginService from './services/login';
 import blogService from './services/blog';
 
@@ -13,6 +15,8 @@ const App = () => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setsuccessMessage] = useState(null);
 
   useEffect(() => {
     const user = JSON.parse(window.localStorage.getItem('user'));
@@ -24,10 +28,11 @@ const App = () => {
 
   useEffect(() => {
     if (user === null) return;
+    blogService.setAuthorizationStr(user.token);
     blogService
       .getAllPosts(user)
       .then(posts => setBlogPosts(posts));
-  }, [user]); // runs after first render and everytime user is updated.
+  }, [user]); // runs after first render and every time user is updated.
 
   const handleUsernameChange = e => setUsername(e.target.value);
   const handlePasswordChange = e => setPassword(e.target.value);
@@ -49,7 +54,10 @@ const App = () => {
       setUsername('');
       setPassword('');
     } catch (exception) {
-      console.log('Invalid username or password');
+      setErrorMessage(exception.response.data.error);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 4000);
     }
   };
 
@@ -57,32 +65,45 @@ const App = () => {
     e.preventDefault();
     localStorage.removeItem('user');
     blogService.setAuthorizationStr(null);
+    setBlogPosts([]);
     setUser(null);
   }
 
-  const onCreatePost = e => {
+  const onCreatePost = async e => {
     e.preventDefault();
-    blogService
-      .createPost({
-        title,
-        author,
-        url
-      })
-      .then(createdPost => {
-        setBlogPosts([...blogPosts, createdPost]);
-      });
+    const createdPost = await blogService.createPost({
+      title,
+      author,
+      url
+    });
+    
+    setBlogPosts([...blogPosts, createdPost]);
+    
+    setTitle('');
+    setAuthor('');
+    setUrl('');
+    
+    setsuccessMessage(`${createdPost.title} was successfully posted`);
+    setTimeout(() => {
+      setsuccessMessage(null);
+    }, 4000);
   }
 
   if (user === null) {
     return (
       <div>
-        <Login
-          onLogin={onLogin}
-          username={username}
-          handleUsernameChange={handleUsernameChange}
-          password={password}
-          handlePasswordChange={handlePasswordChange}
+        <ErrorNotification
+          message={errorMessage}
         />
+        <div>
+          <Login
+            onLogin={onLogin}
+            username={username}
+            handleUsernameChange={handleUsernameChange}
+            password={password}
+            handlePasswordChange={handlePasswordChange}
+          />
+        </div>
       </div>
     );
   }
@@ -91,6 +112,9 @@ const App = () => {
     <div>
       <div>
         <h1>Welcome to {user.name}'s blog</h1>
+        <SuccessNotification 
+          message={successMessage}
+        />
         <button
           type="button"
           onClick={onLogout}
