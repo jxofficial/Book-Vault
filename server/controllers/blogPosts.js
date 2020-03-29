@@ -3,6 +3,16 @@ const BlogPost = require('../models/blogPost');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 
+const getTokenFromAuthorizationHeader = req => {
+  const authorizationStr = req.get('Authorization'); // returns authorization header field of the req;
+  console.log(authorizationStr);
+  if (authorizationStr && authorizationStr.toLowerCase().startsWith('bearer ')) {
+    return authorizationStr.substring(7);
+  } else {
+    return null;
+  }
+} 
+
 blogPostsRouter.get('/blogposts', async (req, resp, next) => {
   const documents = await BlogPost.find({}).populate('user', { username: 1, name: 1});
   const parsedPosts = documents.map(doc => doc.toJSON());
@@ -10,9 +20,26 @@ blogPostsRouter.get('/blogposts', async (req, resp, next) => {
 });
 
 blogPostsRouter.get('/blogposts/:username', async (req, resp, next) => {
-  const username = req.params.username;
-  const user = await User.find({username});
-  console.log(user);
+  const usernameInUrl = req.params.username;
+  const token = getTokenFromAuthorizationHeader(req);
+
+  if (!token) {
+    return resp.status(401).json({ error: 'Token missing' });
+  } 
+
+  try {
+    const decodedToken = jwt.verify(token, process.env.TOKEN_PRIVATE_KEY);
+    if (decodedToken.username !== usernameInUrl) {
+      return resp.status(401).json({
+        error: `Authentication token does not match username in req url: 
+        unable to retrieve ${usernameInUrl}'s posts`
+      });
+    }
+  } catch (exception) {
+    next(exception);
+  }
+
+  const user = await User.find({username: usernameInUrl});
   const documents = 
     await BlogPost
       .find({user})
@@ -24,8 +51,6 @@ blogPostsRouter.get('/blogposts/:username', async (req, resp, next) => {
   const parsedPosts = documents.map(doc => doc.toJSON());
   resp.json(parsedPosts);
 });
-
-
 
 blogPostsRouter.post('/blog', async (req, resp, next) => {
   const body = req.body;
@@ -45,7 +70,7 @@ blogPostsRouter.post('/blog', async (req, resp, next) => {
     title: body.title,
     author: body.author,
     url: body.url,
-    likes: body.likes,
+    likes: body.likes || 0,
     user: user._id
   });
 

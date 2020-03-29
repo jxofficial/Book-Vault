@@ -1,29 +1,31 @@
-import axios from 'axios'
+import axios from 'axios';
 
-const BASE_URL = '/api/blogposts'
+const BASE_URL = '/api';
 
-let authenticationStr = null;
+let authorizationStr = null;
 
-const setAuthenicationStr = token => {
+const setAuthorizationStr = token => {
   if (token === null) {
-    authenticationStr = null;
+    authorizationStr = null;
   } else {
-    authenticationStr = `Authentication ${token}`;
+    authorizationStr = `Bearer ${token}`;
   }
 }
 
 const getAllPosts = user => {
   const username = user.username;
   const config = {
-    headers: {
-      Authentication: authenticationStr
-    }
+    headers: { Authorization: authorizationStr }
   };
-  const request = axios.get(`${BASE_URL}/${username}`, config);
-  return request.then(response => response.data);
+  const result = axios.get(`${BASE_URL}/blogposts/${username}`, config);
+  return result.then(response => response.data);
+}
+
+const createPost = (post) => {
+
 }
 
 export default {
-  setAuthenicationStr,
+  setAuthorizationStr,
   getAllPosts
 }
