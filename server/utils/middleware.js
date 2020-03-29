@@ -7,13 +7,13 @@ const requestLogger = (req, resp, next) => {
 };
 
 const tokenExtractor = (req, resp, next) => {
-  const authorizationStr = req.get('authorization');
+  const authorizationStr = req.get('Authorization');
   if (authorizationStr && authorizationStr.toLowerCase().startsWith('bearer ')) {
     req.body.token = authorizationStr.substring(7);
   } else {
     req.body.token = null;
   }
-  next(); 
+  next();
 }
 
 module.exports = {

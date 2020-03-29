@@ -28,7 +28,7 @@ const App = () => {
       .getAllPosts(user)
       .then(posts => setBlogPosts(posts));
   }, [user]); // runs after first render and everytime user is updated.
-  
+
   const handleUsernameChange = e => setUsername(e.target.value);
   const handlePasswordChange = e => setPassword(e.target.value);
 
@@ -62,7 +62,15 @@ const App = () => {
 
   const onCreatePost = e => {
     e.preventDefault();
-    blogService.createPost()
+    blogService
+      .createPost({
+        title,
+        author,
+        url
+      })
+      .then(createdPost => {
+        setBlogPosts([...blogPosts, createdPost]);
+      });
   }
 
   if (user === null) {
@@ -95,7 +103,7 @@ const App = () => {
         )}
       </div>
       <div>
-        <BlogPostForm 
+        <BlogPostForm
           createPost={onCreatePost}
           title={title}
           handleTitleChange={handleTitleChange}

@@ -3,29 +3,18 @@ const BlogPost = require('../models/blogPost');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 
-const getTokenFromAuthorizationHeader = req => {
-  const authorizationStr = req.get('Authorization'); // returns authorization header field of the req;
-  console.log(authorizationStr);
-  if (authorizationStr && authorizationStr.toLowerCase().startsWith('bearer ')) {
-    return authorizationStr.substring(7);
-  } else {
-    return null;
-  }
-} 
-
 blogPostsRouter.get('/blogposts', async (req, resp, next) => {
-  const documents = await BlogPost.find({}).populate('user', { username: 1, name: 1});
+  const documents = await BlogPost.find({}).populate('user', { username: 1, name: 1 });
   const parsedPosts = documents.map(doc => doc.toJSON());
   return resp.json(parsedPosts);
 });
 
 blogPostsRouter.get('/blogposts/:username', async (req, resp, next) => {
   const usernameInUrl = req.params.username;
-  const token = getTokenFromAuthorizationHeader(req);
-
+  const token = req.body.token;
   if (!token) {
     return resp.status(401).json({ error: 'Token missing' });
-  } 
+  }
 
   try {
     const decodedToken = jwt.verify(token, process.env.TOKEN_PRIVATE_KEY);
@@ -39,15 +28,15 @@ blogPostsRouter.get('/blogposts/:username', async (req, resp, next) => {
     next(exception);
   }
 
-  const user = await User.find({username: usernameInUrl});
-  const documents = 
+  const user = await User.find({ username: usernameInUrl });
+  const documents =
     await BlogPost
-      .find({user})
+      .find({ user })
       .populate('user', {
         username: 1,
         name: 1
       });
-  
+
   const parsedPosts = documents.map(doc => doc.toJSON());
   resp.json(parsedPosts);
 });
@@ -55,8 +44,8 @@ blogPostsRouter.get('/blogposts/:username', async (req, resp, next) => {
 blogPostsRouter.post('/blog', async (req, resp, next) => {
   const body = req.body;
   const token = body.token;
-  if (!token) return resp.status(401).json({error: 'Token missing'});
-  let decodedToken; 
+  if (!token) return resp.status(401).json({ error: 'Token missing' });
+  let decodedToken;
 
   try {
     decodedToken = jwt.verify(token, process.env.TOKEN_PRIVATE_KEY);
@@ -90,8 +79,8 @@ blogPostsRouter.delete('/blogposts/:id', async (req, resp, next) => {
   }
 
   const token = req.body.token;
-  if (!token) return resp.status(401).json({error: 'Token missing'});
-  
+  if (!token) return resp.status(401).json({ error: 'Token missing' });
+
   let decodedToken;
   try {
     decodedToken = jwt.verify(token, process.env.TOKEN_PRIVATE_KEY);
@@ -103,7 +92,7 @@ blogPostsRouter.delete('/blogposts/:id', async (req, resp, next) => {
     await BlogPost.findByIdAndDelete(blogPostId);
     resp.status(204).end();
   } else {
-    resp.status(401).json({error: 'Only user who posted the post can delete the post'});
+    resp.status(401).json({ error: 'Only user who posted the post can delete the post' });
   }
 });
 
