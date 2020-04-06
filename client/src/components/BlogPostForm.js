@@ -1,20 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const BlogPostForm = (props) => {
-  const {
-    createPost,
-    title,
-    handleTitleChange,
-    author,
-    handleAuthorChange,
-    url,
-    handleUrlChange
-  } = props; 
-  
+const BlogPostForm = ({ createPost }) => {
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [url, setUrl] = useState('');
+
+  const handleTitleChange = e => setTitle(e.target.value);
+  const handleAuthorChange = e => setAuthor(e.target.value);
+  const handleUrlChange = e => setUrl(e.target.value);
+
+  const submitForm = e => {
+    e.preventDefault();
+    const postObject = {
+      title,
+      author,
+      url
+    };
+
+    createPost(postObject);
+
+    setTitle('');
+    setAuthor('');
+    setUrl('');
+  };
+
   return (
     <>
       <h2>Create new post</h2>
-      <form onSubmit={createPost}>
+      <form onSubmit={submitForm}>
         <div>
           <label htmlFor="title">Title: </label>
           <input

@@ -4,7 +4,6 @@ const app = require('../app');
 const BlogPost = require('../models/blogPost');
 const User = require('../models/user');
 const helper = require('./tests_helper');
-const jwt = require('jsonwebtoken');
 
 const api = supertest(app);
 

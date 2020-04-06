@@ -4,17 +4,15 @@ import BlogPost from './components/BlogPost';
 import BlogPostForm from './components/BlogPostForm';
 import ErrorNotification from './components/ErrorNotification';
 import SuccessNotification from './components/SuccessNotification';
+import Toggleable from './components/Toggleable';
+
 import loginService from './services/login';
 import blogService from './services/blog';
 
 const App = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [user, setUser] = useState(null); // user is the login resp obj with token, username & name properties
   const [blogPosts, setBlogPosts] = useState([]);
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
+
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setsuccessMessage] = useState(null);
 
@@ -34,25 +32,12 @@ const App = () => {
       .then(posts => setBlogPosts(posts));
   }, [user]); // runs after first render and every time user is updated.
 
-  const handleUsernameChange = e => setUsername(e.target.value);
-  const handlePasswordChange = e => setPassword(e.target.value);
 
-  const handleTitleChange = e => setTitle(e.target.value);
-  const handleAuthorChange = e => setAuthor(e.target.value);
-  const handleUrlChange = e => setUrl(e.target.value);
-
-  const onLogin = async e => {
-    e.preventDefault();
+  const login = async credentials => {
     try {
-      const user = await loginService.login({
-        username,
-        password
-      });
-
+      const user = await loginService.login(credentials);
       window.localStorage.setItem('user', JSON.stringify(user));
       setUser(user);
-      setUsername('');
-      setPassword('');
     } catch (exception) {
       setErrorMessage(exception.response.data.error);
       setTimeout(() => {
@@ -61,28 +46,19 @@ const App = () => {
     }
   };
 
-  const onLogout = e => {
+  const logout = e => {
     e.preventDefault();
     localStorage.removeItem('user');
     blogService.setAuthorizationStr(null);
     setBlogPosts([]);
     setUser(null);
-  }
+  };
 
-  const onCreatePost = async e => {
-    e.preventDefault();
-    const createdPost = await blogService.createPost({
-      title,
-      author,
-      url
-    });
-    
+  const createPost = async post => {
+    const createdPost = await blogService.createPost(post);
+
     setBlogPosts([...blogPosts, createdPost]);
-    
-    setTitle('');
-    setAuthor('');
-    setUrl('');
-    
+
     setsuccessMessage(`${createdPost.title} was successfully posted`);
     setTimeout(() => {
       setsuccessMessage(null);
@@ -92,53 +68,41 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-        <ErrorNotification
-          message={errorMessage}
-        />
         <div>
-          <Login
-            onLogin={onLogin}
-            username={username}
-            handleUsernameChange={handleUsernameChange}
-            password={password}
-            handlePasswordChange={handlePasswordChange}
+          <ErrorNotification message={errorMessage} />
+        </div>
+        <Login login={login} />
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <div>
+          <h1>Welcome to {user.name}'s blog</h1>
+          <SuccessNotification
+            message={successMessage}
           />
+          <button
+            type="button"
+            onClick={logout}
+          >
+            Logout
+          </button>
+          <h2>Posts</h2>
+          {blogPosts.map(post =>
+            <BlogPost key={post.id} post={post} />
+          )}
+        </div>
+
+        <div>
+          <Toggleable buttonLabel="New Post">
+            <BlogPostForm createPost={createPost} />
+          </Toggleable>
         </div>
       </div>
     );
   }
 
-  return (
-    <div>
-      <div>
-        <h1>Welcome to {user.name}'s blog</h1>
-        <SuccessNotification 
-          message={successMessage}
-        />
-        <button
-          type="button"
-          onClick={onLogout}
-        >
-          Logout
-      </button>
-        <h2>Posts</h2>
-        {blogPosts.map(post =>
-          <BlogPost key={post.id} post={post} />
-        )}
-      </div>
-      <div>
-        <BlogPostForm
-          createPost={onCreatePost}
-          title={title}
-          handleTitleChange={handleTitleChange}
-          author={author}
-          handleAuthorChange={handleAuthorChange}
-          url={url}
-          handleUrlChange={handleUrlChange}
-        />
-      </div>
-    </div>
-  );
 }
 
 export default App;
