@@ -13,7 +13,11 @@ const middlewares = require('./utils/middleware');
 console.log('Connecting to MongoDB ---');
 
 mongoose
-  .connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(config.MONGODB_URI, { 
+      useNewUrlParser: true, 
+      useUnifiedTopology: true,
+      useFindAndModify: false 
+  })
   .then(() => console.log('Connection successful'))
   .catch(err => console.log('Connection error', err.message));
 

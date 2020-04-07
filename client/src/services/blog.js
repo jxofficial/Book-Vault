@@ -27,8 +27,16 @@ const createPost = post => {
   return result.then(response => response.data);
 }
 
+const likePost = post => {
+  const updatedLikes = post.likes + 1;
+  const updatedPost = {...post, likes: updatedLikes};
+  const result = axios.put(`${BASE_URL}/blogposts/${post.id}`, updatedPost);
+  return result.then(response => response.data);
+}
+
 export default {
   setAuthorizationStr,
   getAllPosts,
-  createPost
+  createPost,
+  likePost
 }

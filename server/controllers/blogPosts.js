@@ -103,11 +103,14 @@ blogPostsRouter.put('/blogposts/:id', async (req, resp, next) => {
     title: body.title,
     author: body.author,
     url: body.url,
-    likes: body.likes
+    likes: body.likes,
+    user: body.user.id
   };
 
   try {
-    const updatedDocument = await BlogPost.findByIdAndUpdate(id, updatedPost, { new: true })
+    const updatedDocument = await BlogPost
+      .findByIdAndUpdate(id, updatedPost, { new: true })
+      .populate('user', {username: 1, name: 1});
     resp.json(updatedDocument.toJSON());
   } catch (exception) {
     next(exception);

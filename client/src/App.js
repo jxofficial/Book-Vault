@@ -56,7 +56,6 @@ const App = () => {
 
   const createPost = async post => {
     const createdPost = await blogService.createPost(post);
-
     setBlogPosts([...blogPosts, createdPost]);
 
     setsuccessMessage(`${createdPost.title} was successfully posted`);
@@ -64,6 +63,15 @@ const App = () => {
       setsuccessMessage(null);
     }, 4000);
   }
+
+  const likePost = async post => {
+    const updatedPost = await blogService.likePost(post);
+    const updatedPosts = blogPosts.map(post => {
+      if (post.id === updatedPost.id) return updatedPost;
+      else return post;
+    });
+    setBlogPosts(updatedPosts);
+  };
 
   if (user === null) {
     return (
@@ -90,7 +98,7 @@ const App = () => {
           </button>
           <h2>Posts</h2>
           {blogPosts.map(post =>
-            <BlogPost key={post.id} post={post} />
+            <BlogPost key={post.id} post={post} likePost={likePost}/>
           )}
         </div>
 
