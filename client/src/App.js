@@ -10,6 +10,10 @@ import loginService from './services/login';
 import blogService from './services/blog';
 
 const App = () => {
+  // allows the parent to access a DOM node or React element outside the render flow 
+  // during the render phase, you modify a child with new props
+  const blogFormRef = React.createRef(); 
+
   const [user, setUser] = useState(null); // user is the login resp obj with token, username & name properties
   const [blogPosts, setBlogPosts] = useState([]);
 
@@ -28,7 +32,7 @@ const App = () => {
     if (user === null) return;
     blogService.setAuthorizationStr(user.token);
     blogService
-      .getAllPosts(user)
+      .getAllPosts()
       .then(posts => setBlogPosts(posts));
   }, [user]); // runs after first render and every time user is updated.
 
@@ -55,6 +59,10 @@ const App = () => {
   };
 
   const createPost = async post => {
+    // cannot be placed after setBlogPosts 
+    // because the toggleable react element will have been updated 
+    // and the blogFormRef will point to a new react element.
+    blogFormRef.current.toggleVisibility(); 
     const createdPost = await blogService.createPost(post);
     setBlogPosts([...blogPosts, createdPost]);
 
@@ -103,7 +111,7 @@ const App = () => {
         </div>
 
         <div>
-          <Toggleable buttonLabel="New Post">
+          <Toggleable buttonLabel="New Post" ref={blogFormRef}>
             <BlogPostForm createPost={createPost} />
           </Toggleable>
         </div>
