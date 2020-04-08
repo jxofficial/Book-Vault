@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import Login from './components/Login';
-import BlogPost from './components/BlogPost';
 import BlogPostForm from './components/BlogPostForm';
 import ErrorNotification from './components/ErrorNotification';
 import SuccessNotification from './components/SuccessNotification';
@@ -8,6 +7,7 @@ import Toggleable from './components/Toggleable';
 
 import loginService from './services/login';
 import blogService from './services/blog';
+import BlogPostList from './components/BlogPostList';
 
 const App = () => {
   // allows the parent to access a DOM node or React element outside the render flow 
@@ -81,6 +81,11 @@ const App = () => {
     setBlogPosts(updatedPosts);
   };
 
+  const sortBlogPosts = () => {
+    const sortedBlogPosts = [...blogPosts.sort((post1, post2) => post2.likes - post1.likes)];
+    setBlogPosts(sortedBlogPosts);
+  }
+
   if (user === null) {
     return (
       <div>
@@ -104,10 +109,11 @@ const App = () => {
           >
             Logout
           </button>
-          <h2>Posts</h2>
-          {blogPosts.map(post =>
-            <BlogPost key={post.id} post={post} likePost={likePost}/>
-          )}
+          <h2>
+            Posts&nbsp;
+            <span><button onClick={sortBlogPosts}>Sort</button></span>
+          </h2>
+          <BlogPostList blogPosts={blogPosts} likePost={likePost}/>
         </div>
 
         <div>
