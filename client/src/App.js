@@ -12,7 +12,7 @@ import BlogPostList from './components/BlogPostList';
 const App = () => {
   // allows the parent to access a DOM node or React element outside the render flow 
   // during the render phase, you modify a child with new props
-  const blogFormRef = React.createRef(); 
+  const blogFormRef = React.createRef();
 
   const [user, setUser] = useState(null); // user is the login resp obj with token, username & name properties
   const [blogPosts, setBlogPosts] = useState([]);
@@ -62,8 +62,9 @@ const App = () => {
     // cannot be placed after setBlogPosts 
     // because the toggleable react element will have been updated 
     // and the blogFormRef will point to a new react element.
-    blogFormRef.current.toggleVisibility(); 
+    blogFormRef.current.toggleVisibility();
     const createdPost = await blogService.createPost(post);
+    console.log(createdPost);
     setBlogPosts([...blogPosts, createdPost]);
 
     setsuccessMessage(`${createdPost.title} was successfully posted`);
@@ -80,6 +81,23 @@ const App = () => {
     });
     setBlogPosts(updatedPosts);
   };
+
+  const deletePost = async postToBeDeleted => {
+    try {
+      if (postToBeDeleted.user.username === user.username) {
+        const isToBeDeleted = window.confirm(`${postToBeDeleted.title} will be deleted!`);
+        if (isToBeDeleted) {
+          await blogService.deletePost(postToBeDeleted);
+          const updatedPosts = blogPosts.filter(post => post.id !== postToBeDeleted.id);
+          setBlogPosts(updatedPosts);
+        }
+      }
+    } catch (exception) {
+      setErrorMessage(exception.response.data.error); // data is the actual response object sent
+    }
+  }
+
+
 
   const sortBlogPosts = () => {
     const sortedBlogPosts = [...blogPosts.sort((post1, post2) => post2.likes - post1.likes)];
@@ -113,7 +131,11 @@ const App = () => {
             Posts&nbsp;
             <span><button onClick={sortBlogPosts}>Sort</button></span>
           </h2>
-          <BlogPostList blogPosts={blogPosts} likePost={likePost}/>
+          <BlogPostList
+            blogPosts={blogPosts}
+            likePost={likePost}
+            deletePost={deletePost}
+          />
         </div>
 
         <div>

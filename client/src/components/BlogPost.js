@@ -10,7 +10,8 @@ const BlogPost = (props) => {
 
   const {
     post,
-    likePost
+    likePost,
+    deletePost
   } = props;
 
   
@@ -21,6 +22,7 @@ const BlogPost = (props) => {
   const togglePostDetailsVisible = () => setPostDetailsVisible(!postDetailsVisible);
 
   const onClickLike = () => likePost(post);
+  const onClickDelete = () => deletePost(post);
 
   return (
     <div style={postStyle}>
@@ -36,6 +38,7 @@ const BlogPost = (props) => {
           <button type="button" onClick={onClickLike}>Like</button>
         </div>
         <div>Book saved by {post.user.name}</div>
+        <button type="button" onClick={onClickDelete}>Delete post</button>
       </div>
     </div>
   );

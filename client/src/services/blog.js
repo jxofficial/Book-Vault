@@ -39,10 +39,16 @@ const likePost = post => {
   return result.then(response => response.data);
 };
 
+const deletePost = post => {
+  const result = axios.delete(`${BASE_URL}/blogposts/${post.id}`, config);
+  return result.then(response => response.data);
+};
+
 export default {
   setAuthorizationStr,
-  getAllPosts,  
+  getAllPosts,
   getAllPostsBy,
   createPost,
-  likePost
+  likePost,
+  deletePost
 };

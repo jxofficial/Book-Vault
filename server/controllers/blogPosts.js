@@ -64,6 +64,7 @@ blogPostsRouter.post('/blog', async (req, resp, next) => {
   });
 
   const result = await blogPost.save();
+  BlogPost.populate(result, {path:"user", select:'username name'});
   user.blogPosts = user.blogPosts.concat(result);
   await user.save();
   resp.status(201).json(result.toJSON());
