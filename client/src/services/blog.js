@@ -34,7 +34,7 @@ const createPost = post => {
 
 const likePost = post => {
   const updatedLikes = post.likes + 1;
-  const updatedPost = {...post, likes: updatedLikes};
+  const updatedPost = { ...post, likes: updatedLikes };
   const result = axios.put(`${BASE_URL}/blogposts/${post.id}`, updatedPost);
   return result.then(response => response.data);
 };

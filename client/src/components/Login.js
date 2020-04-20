@@ -9,7 +9,7 @@ const Login = ({ login }) => {
 
   const onLogin = e => {
     e.preventDefault();
-    const credentials = {username, password};
+    const credentials = { username, password };
     login(credentials);
     setUsername('');
     setPassword('');

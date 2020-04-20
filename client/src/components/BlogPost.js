@@ -14,7 +14,7 @@ const BlogPost = (props) => {
     deletePost
   } = props;
 
-  
+
   const [postDetailsVisible, setPostDetailsVisible] = useState(false);
 
   const buttonText = postDetailsVisible ? 'Hide details' : 'View details';

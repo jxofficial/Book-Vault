@@ -7,12 +7,12 @@ const BlogPostList = ({ blogPosts, likePost, deletePost }) => {
       {
         blogPosts
           .map(post =>
-            <BlogPost 
-              key={post.id} 
-              post={post} 
+            <BlogPost
+              key={post.id}
+              post={post}
               likePost={likePost}
-              deletePost={deletePost} 
-            />            
+              deletePost={deletePost}
+            />
           )}
     </div>
   );

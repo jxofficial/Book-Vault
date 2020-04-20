@@ -10,7 +10,7 @@ import blogService from './services/blog';
 import BlogPostList from './components/BlogPostList';
 
 const App = () => {
-  // allows the parent to access a DOM node or React element outside the render flow 
+  // allows the parent to access a DOM node or React element outside the render flow
   // during the render phase, you modify a child with new props
   const blogFormRef = React.createRef();
 
@@ -59,8 +59,8 @@ const App = () => {
   };
 
   const createPost = async post => {
-    // cannot be placed after setBlogPosts 
-    // because the toggleable react element will have been updated 
+    // cannot be placed after setBlogPosts
+    // because the toggleable react element will have been updated
     // and the blogFormRef will point to a new react element.
     blogFormRef.current.toggleVisibility();
     const createdPost = await blogService.createPost(post);
@@ -97,8 +97,6 @@ const App = () => {
     }
   }
 
-
-
   const sortBlogPosts = () => {
     const sortedBlogPosts = [...blogPosts.sort((post1, post2) => post2.likes - post1.likes)];
     setBlogPosts(sortedBlogPosts);
@@ -117,7 +115,7 @@ const App = () => {
     return (
       <div>
         <div>
-          <h1>Welcome to {user.name}'s blog</h1>
+          <h1>Welcome to {user.name}&apos;s blog</h1>
           <SuccessNotification
             message={successMessage}
           />
