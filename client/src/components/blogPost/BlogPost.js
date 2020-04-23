@@ -25,13 +25,11 @@ const BlogPost = (props) => {
   const onClickDelete = () => deletePost(post);
 
   return (
-    <div style={postStyle}>
-      {post.title} by {post.author}<span>&nbsp;</span>
-      <span>
-        <button type="button" onClick={togglePostDetailsVisible}>{buttonText}</button>
-      </span>
+    <div style={postStyle} className="content">
+      {post.title} by {post.author}&nbsp;
+      <button type="button" onClick={togglePostDetailsVisible}>{buttonText}</button>
 
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className="toggleable-content">
         <div>{post.url}</div>
         <div>
           {post.likes}<span>&nbsp;</span>
@@ -42,6 +40,6 @@ const BlogPost = (props) => {
       </div>
     </div>
   );
-}
+};
 
 export default BlogPost;

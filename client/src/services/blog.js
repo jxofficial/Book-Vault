@@ -14,7 +14,7 @@ const setAuthorizationStr = token => {
   config = {
     headers: { Authorization: authorizationStr }
   };
-}
+};
 
 const getAllPosts = () => {
   const result = axios.get(`${BASE_URL}/blogposts`);

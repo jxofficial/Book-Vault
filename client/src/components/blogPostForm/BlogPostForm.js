@@ -60,7 +60,7 @@ const BlogPostForm = ({ createPost }) => {
         </button>
       </form>
     </>
-  )
-}
+  );
+};
 
 export default BlogPostForm;

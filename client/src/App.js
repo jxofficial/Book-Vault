@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import Login from './components/Login';
-import BlogPostForm from './components/BlogPostForm';
+import BlogPostForm from './components/blogPostForm/BlogPostForm';
 import ErrorNotification from './components/ErrorNotification';
 import SuccessNotification from './components/SuccessNotification';
 import Toggleable from './components/Toggleable';
@@ -71,7 +71,7 @@ const App = () => {
     setTimeout(() => {
       setsuccessMessage(null);
     }, 4000);
-  }
+  };
 
   const likePost = async post => {
     const updatedPost = await blogService.likePost(post);
@@ -95,12 +95,12 @@ const App = () => {
     } catch (exception) {
       setErrorMessage(exception.response.data.error); // data is the actual response object sent
     }
-  }
+  };
 
   const sortBlogPosts = () => {
     const sortedBlogPosts = [...blogPosts.sort((post1, post2) => post2.likes - post1.likes)];
     setBlogPosts(sortedBlogPosts);
-  }
+  };
 
   if (user === null) {
     return (
@@ -144,7 +144,6 @@ const App = () => {
       </div>
     );
   }
-
-}
+};
 
 export default App;

@@ -6,7 +6,7 @@ const SuccessNotification = ({ message }) => {
     border: '2px green solid',
     backgroundColor: '#D3D3D3',
     padding: '10px'
-  }
+  };
 
   return (
     <>
@@ -15,7 +15,7 @@ const SuccessNotification = ({ message }) => {
         message={message}
       />
     </>
-  )
+  );
 };
 
 export default SuccessNotification;

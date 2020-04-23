@@ -6,7 +6,7 @@ const ErrorNotification = ({ message }) => {
     border: '2px red solid',
     backgroundColor: '#D3D3D3',
     padding: '10px'
-  }
+  };
 
   return (
     <>
@@ -15,7 +15,7 @@ const ErrorNotification = ({ message }) => {
         message={message}
       />
     </>
-  )
+  );
 };
 
 export default ErrorNotification;

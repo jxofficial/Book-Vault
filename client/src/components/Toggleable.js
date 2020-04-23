@@ -1,5 +1,5 @@
 import React, { useState, useImperativeHandle } from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
 // forwardRef attaches the ref from App.js to the mounted Toggleable react element
 // ie ref.current points to the Toggleable react element
@@ -7,7 +7,7 @@ const Toggleable = React.forwardRef((props, ref) => {
 
   Toggleable.propTypes = {
     buttonLabel: PropTypes.string.isRequired
-  }
+  };
 
   const [visibility, setVisibility] = useState(false);
 
