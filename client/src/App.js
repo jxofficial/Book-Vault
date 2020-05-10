@@ -18,7 +18,7 @@ const App = () => {
   const [blogPosts, setBlogPosts] = useState([]);
 
   const [errorMessage, setErrorMessage] = useState(null);
-  const [successMessage, setsuccessMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
     const user = JSON.parse(window.localStorage.getItem('user'));
@@ -64,12 +64,11 @@ const App = () => {
     // and the blogFormRef will point to a new react element.
     blogFormRef.current.toggleVisibility();
     const createdPost = await blogService.createPost(post);
-    console.log(createdPost);
     setBlogPosts([...blogPosts, createdPost]);
 
-    setsuccessMessage(`${createdPost.title} was successfully posted`);
+    setSuccessMessage(`${createdPost.title} was successfully posted`);
     setTimeout(() => {
-      setsuccessMessage(null);
+      setSuccessMessage(null);
     }, 4000);
   };
 
@@ -84,21 +83,22 @@ const App = () => {
 
   const deletePost = async postToBeDeleted => {
     try {
-      if (postToBeDeleted.user.username === user.username) {
-        const isToBeDeleted = window.confirm(`${postToBeDeleted.title} will be deleted!`);
-        if (isToBeDeleted) {
-          await blogService.deletePost(postToBeDeleted);
-          const updatedPosts = blogPosts.filter(post => post.id !== postToBeDeleted.id);
-          setBlogPosts(updatedPosts);
-        }
+      const isToBeDeleted = window.confirm(`${postToBeDeleted.title} will be deleted!`);
+      if (isToBeDeleted) {
+        await blogService.deletePost(postToBeDeleted);
+        const updatedPosts = blogPosts.filter(post => post.id !== postToBeDeleted.id);
+        setBlogPosts(updatedPosts);
       }
     } catch (exception) {
       setErrorMessage(exception.response.data.error); // data is the actual response object sent
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 4000);
     }
   };
 
   const sortBlogPosts = () => {
-    const sortedBlogPosts = [...blogPosts.sort((post1, post2) => post2.likes - post1.likes)];
+    const sortedBlogPosts = [...blogPosts.sort((post1, post2) => post1.likes - post2.likes)];
     setBlogPosts(sortedBlogPosts);
   };
 
@@ -116,15 +116,12 @@ const App = () => {
       <div>
         <div>
           <h1>Welcome to {user.name}&apos;s blog</h1>
-          <SuccessNotification
-            message={successMessage}
-          />
-          <button
-            type="button"
-            onClick={logout}
-          >
-            Logout
-          </button>
+          <div>
+            <SuccessNotification message={successMessage} />
+          </div>
+          <div>
+            <ErrorNotification message={errorMessage} />
+          </div>
           <h2>
             Posts&nbsp;
             <span><button onClick={sortBlogPosts}>Sort</button></span>
@@ -141,6 +138,12 @@ const App = () => {
             <BlogPostForm createPost={createPost} />
           </Toggleable>
         </div>
+        <button
+          type="button"
+          onClick={logout}
+        >
+          Logout
+        </button>
       </div>
     );
   }

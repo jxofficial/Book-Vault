@@ -11,6 +11,10 @@ blogPostsRouter.get('/blogposts', async (req, resp, next) => {
 
 blogPostsRouter.get('/blogposts/:username', async (req, resp, next) => {
   const usernameInUrl = req.params.username;
+  const userExists = await User.findOne({ username: usernameInUrl });
+  if (!userExists) {
+    return resp.status(404).json({ error: 'Username invalid, no posts shown' });
+  }
   const token = req.body.token;
   if (!token) {
     return resp.status(401).json({ error: 'Token missing' });
@@ -64,22 +68,17 @@ blogPostsRouter.post('/blog', async (req, resp, next) => {
   });
 
   const result = await blogPost.save();
-  BlogPost.populate(result, {path:"user", select:'username name'});
+  BlogPost.populate(result, { path: 'user', select: 'username name' });
   user.blogPosts = user.blogPosts.concat(result);
   await user.save();
   resp.status(201).json(result.toJSON());
 });
 
 blogPostsRouter.delete('/blogposts/:id', async (req, resp, next) => {
-  const blogPostId = req.params.id;
-  let postToDelete;
-  try {
-    postToDelete = await BlogPost.findById(blogPostId);
-  } catch (exception) {
-    next(exception);
-  }
-
   const token = req.body.token;
+  const blogPostId = req.params.id;
+  const postToDelete = await BlogPost.findById(blogPostId);
+
   if (!token) return resp.status(401).json({ error: 'Token missing' });
 
   let decodedToken;
@@ -88,6 +87,7 @@ blogPostsRouter.delete('/blogposts/:id', async (req, resp, next) => {
   } catch (exception) {
     next(exception);
   }
+
 
   if (postToDelete.user.toString() === decodedToken.id.toString()) {
     await BlogPost.findByIdAndDelete(blogPostId);
@@ -111,7 +111,7 @@ blogPostsRouter.put('/blogposts/:id', async (req, resp, next) => {
   try {
     const updatedDocument = await BlogPost
       .findByIdAndUpdate(id, updatedPost, { new: true })
-      .populate('user', {username: 1, name: 1});
+      .populate('user', { username: 1, name: 1 });
     resp.json(updatedDocument.toJSON());
   } catch (exception) {
     next(exception);

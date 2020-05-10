@@ -11,6 +11,7 @@ const ErrorNotification = ({ message }) => {
   return (
     <>
       <Notifcation
+        className='error'
         style={style}
         message={message}
       />

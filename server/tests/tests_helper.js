@@ -9,6 +9,8 @@ const PASSWORD_2 = 'jazzminion';
 let PASSWORD_HASH_1;
 let PASSWORD_HASH_2;
 
+// preferable to create user directly using POST request to server
+// query initial users/posts from database using beforeEach
 (async () => {
   PASSWORD_HASH_1 = await bcrypt.hash(PASSWORD_1, SALT_ROUNDS);
   PASSWORD_HASH_2 = await bcrypt.hash(PASSWORD_2, SALT_ROUNDS);

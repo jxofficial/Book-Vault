@@ -32,7 +32,7 @@ const BlogPost = (props) => {
       <div style={showWhenVisible} className="toggleable-content">
         <div>{post.url}</div>
         <div>
-          {post.likes}<span>&nbsp;</span>
+          {post.likes}&nbsp;
           <button type="button" onClick={onClickLike}>Like</button>
         </div>
         <div>Book saved by {post.user.name}</div>

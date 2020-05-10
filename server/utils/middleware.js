@@ -1,8 +1,10 @@
+const logger = require('./logger');
+
 const requestLogger = (req, resp, next) => {
-  console.log('Method:', req.method);
-  console.log('Path:', req.path);
-  console.log('Body:', req.body);
-  console.log('---');
+  logger.info('Method:', req.method);
+  logger.info('Path:', req.path);
+  logger.info('Body:', req.body);
+  logger.info('---');
   next();
 };
 
@@ -16,7 +18,13 @@ const tokenExtractor = (req, resp, next) => {
   next();
 }
 
+const errorHandler = (err, req, resp, next) => {
+  logger.error(err.message);
+  next(); 
+}
+
 module.exports = {
   requestLogger,
-  tokenExtractor
+  tokenExtractor,
+  errorHandler
 }

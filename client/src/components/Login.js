@@ -18,7 +18,7 @@ const Login = ({ login }) => {
   return (
     <>
       <h2>
-        Application Login
+        Blog Login
       </h2>
       <form onSubmit={onLogin}>
         <div>
