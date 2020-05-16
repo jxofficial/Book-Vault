@@ -1,12 +1,46 @@
-import React, { useState } from 'react';
+import React from 'react';
+
+import { makeStyles } from '@material-ui/core/styles';
+import { spacing } from '@material-ui/system';
+import {
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  ListItem,
+  Button,
+  Typography,
+} from '@material-ui/core';
+
+import {
+  ExpandMore,
+  ThumbUp,
+  Delete
+} from '@material-ui/icons';
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    width: '100%'
+  },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightRegular
+  },
+  details: {
+    flexDirection: 'column'
+  },
+  marginRight: {
+    marginRight: '1rem'
+  },
+  marginBottom: {
+    marginBottom: '1.5rem'
+  }
+
+}));
+
 
 const BlogPost = (props) => {
-  const postStyle = {
-    padding: '.5rem .5rem',
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: '.75rem'
-  };
+
+  const classes = useStyles();
 
   const {
     post,
@@ -15,31 +49,59 @@ const BlogPost = (props) => {
   } = props;
 
 
-  const [postDetailsVisible, setPostDetailsVisible] = useState(false);
-
-  const buttonText = postDetailsVisible ? 'Hide details' : 'View details';
-  const showWhenVisible = { display: postDetailsVisible ? '' : 'none' };
-  const togglePostDetailsVisible = () => setPostDetailsVisible(!postDetailsVisible);
-
   const onClickLike = () => likePost(post);
   const onClickDelete = () => deletePost(post);
 
   return (
-    <div style={postStyle} className="content">
-      {post.title} by {post.author}&nbsp;
-      <button type="button" onClick={togglePostDetailsVisible}>{buttonText}</button>
+    <>
+      <ListItem className={classes.root}>
+        <ExpansionPanel>
+          <ExpansionPanelSummary expandIcon={<ExpandMore />}>
+            <Typography variant="subtitle2">
+              {`${post.title} by ${post.author}`}
+            </Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails className={classes.details}>
+            <Typography variant="subtitle2" gutterBottom>
+              Description
+            </Typography>
 
-      <div style={showWhenVisible} className="toggleable-content">
-        <div>{post.url}</div>
-        <div>
-          {post.likes}&nbsp;
-          <button type="button" onClick={onClickLike}>Like</button>
-        </div>
-        <div>Book saved by {post.user.name}</div>
-        <button type="button" onClick={onClickDelete}>Delete post</button>
-      </div>
-    </div>
+            <Typography variant="caption" className={classes.marginBottom}>
+              {post.description}
+            </Typography>
+
+            <Typography variant="subtitle2" className={classes.marginBottom}>
+              <span className={classes.marginRight}>{post.likes}</span>
+              <Button className={classes.marginRight}
+                size="small"
+                color="primary"
+                variant="contained"
+                startIcon={<ThumbUp />}
+                onClick={onClickLike}>
+                Like
+              </Button>
+
+              <Button
+                size="small"
+                variant="contained"
+                color="secondary"
+                startIcon={<Delete />}
+                onClick={onClickDelete}>
+                Delete recommendation
+              </Button>
+            </Typography>
+
+            <Typography variant="overline">
+              Book recommended by {post.user.name}
+            </Typography>
+
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+      </ListItem>
+    </>
   );
 };
 
 export default BlogPost;
+
+

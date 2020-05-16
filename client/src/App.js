@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
+
+import Container from '@material-ui/core/Container';
+
+
+import BlogPost from './components/blogPost/BlogPost';
 import Login from './components/Login';
 import BlogPostForm from './components/blogPostForm/BlogPostForm';
 import ErrorNotification from './components/ErrorNotification';
 import SuccessNotification from './components/SuccessNotification';
 import Toggleable from './components/Toggleable';
+import Header from './components/Header';
 
 import loginService from './services/login';
 import blogService from './services/blog';
-import BlogPostList from './components/BlogPostList';
 
 const App = () => {
   // allows the parent to access a DOM node or React element outside the render flow
@@ -66,7 +71,7 @@ const App = () => {
     const createdPost = await blogService.createPost(post);
     setBlogPosts([...blogPosts, createdPost]);
 
-    setSuccessMessage(`${createdPost.title} was successfully posted`);
+    setSuccessMessage(`${createdPost.title} was successfully added`);
     setTimeout(() => {
       setSuccessMessage(null);
     }, 4000);
@@ -104,18 +109,21 @@ const App = () => {
 
   if (user === null) {
     return (
-      <div>
+      <Container>
         <div>
           <ErrorNotification message={errorMessage} />
         </div>
         <Login login={login} />
-      </div>
+      </Container>
     );
   } else {
     return (
-      <div>
+      <Container>
         <div>
-          <h1>Welcome to {user.name}&apos;s blog</h1>
+          <Header
+            user={user}
+            handleLogout={logout}
+          />
           <div>
             <SuccessNotification message={successMessage} />
           </div>
@@ -126,11 +134,15 @@ const App = () => {
             Posts&nbsp;
             <span><button onClick={sortBlogPosts}>Sort</button></span>
           </h2>
-          <BlogPostList
-            blogPosts={blogPosts}
-            likePost={likePost}
-            deletePost={deletePost}
-          />
+
+          {blogPosts.map(post => (
+            <BlogPost
+              post={post}
+              likePost={likePost}
+              deletePost={deletePost}
+              key={post.id}
+            />
+          ))}
         </div>
 
         <div>
@@ -138,13 +150,7 @@ const App = () => {
             <BlogPostForm createPost={createPost} />
           </Toggleable>
         </div>
-        <button
-          type="button"
-          onClick={logout}
-        >
-          Logout
-        </button>
-      </div>
+      </Container>
     );
   }
 };

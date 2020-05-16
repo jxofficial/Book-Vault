@@ -5,6 +5,8 @@ const blogPostSchema = mongoose.Schema({
   author: String,
   url: String, 
   likes: Number, 
+  description: String,
+  bookImageUrl: String,
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User' // references documents from the user collection

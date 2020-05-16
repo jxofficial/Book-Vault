@@ -1,7 +1,8 @@
 const blogPostsRouter = require('express').Router();
+const jwt = require('jsonwebtoken');
 const BlogPost = require('../models/blogPost');
 const User = require('../models/user');
-const jwt = require('jsonwebtoken');
+const goodReadsApiHandler = require('../utils/middleware').goodReadsApiHandler;
 
 blogPostsRouter.get('/blogposts', async (req, resp, next) => {
   const documents = await BlogPost.find({}).populate('user', { username: 1, name: 1 });
@@ -45,9 +46,10 @@ blogPostsRouter.get('/blogposts/:username', async (req, resp, next) => {
   resp.json(parsedPosts);
 });
 
-blogPostsRouter.post('/blog', async (req, resp, next) => {
+blogPostsRouter.post('/blog', goodReadsApiHandler, async (req, resp, next) => {
   const body = req.body;
-  const token = body.token;
+  const { goodReadsBook, token } = body;
+
   if (!token) return resp.status(401).json({ error: 'Token missing' });
   let decodedToken;
 
@@ -58,19 +60,22 @@ blogPostsRouter.post('/blog', async (req, resp, next) => {
   }
 
   const user = await User.findById(decodedToken.id);
-
   const blogPost = new BlogPost({
     title: body.title,
     author: body.author,
-    url: body.url,
+    url: body.url || `https://www.goodreads.com/book/show/${goodReadsBook.bookId}`,
     likes: body.likes || 0,
+    description: goodReadsBook.bookDescription,
+    bookImageUrl: goodReadsBook.bookImageUrl,
     user: user._id
   });
 
   const result = await blogPost.save();
+
   BlogPost.populate(result, { path: 'user', select: 'username name' });
   user.blogPosts = user.blogPosts.concat(result);
   await user.save();
+
   resp.status(201).json(result.toJSON());
 });
 
@@ -88,7 +93,6 @@ blogPostsRouter.delete('/blogposts/:id', async (req, resp, next) => {
     next(exception);
   }
 
-
   if (postToDelete.user.toString() === decodedToken.id.toString()) {
     await BlogPost.findByIdAndDelete(blogPostId);
     resp.status(204).end();
@@ -101,11 +105,7 @@ blogPostsRouter.put('/blogposts/:id', async (req, resp, next) => {
   const body = req.body;
   const id = req.params.id;
   const updatedPost = {
-    title: body.title,
-    author: body.author,
-    url: body.url,
-    likes: body.likes,
-    user: body.user.id
+    likes: body.likes
   };
 
   try {
