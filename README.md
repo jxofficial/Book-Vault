@@ -10,7 +10,7 @@ Book Vault is an app to track and recommend books read.
 ### Tech
 Book Vault uses the following to work:
 ##### Front-end
-* [React.js] - JavaScript framework
+* [React] - JavaScript framework
 
 ##### Back-end
 * [Express] - Node.js web application framework
