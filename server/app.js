@@ -25,6 +25,7 @@ mongoose
   .catch(err => logger.info('Connection error', err.message));
 
 app.use(cors());
+app.use(express.static('build'));
 app.use(bodyParser.json());
 app.use(middleware.requestLogger);
 app.use(middleware.tokenExtractor);

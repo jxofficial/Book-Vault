@@ -5,7 +5,6 @@ import {
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
-  ListItem,
   Button,
   Typography,
 } from '@material-ui/core';
@@ -62,7 +61,7 @@ const BlogPost = (props) => {
         <ExpansionPanelDetails className={classes.details}>
           <Typography variant="subtitle2" gutterBottom>
             Description
-            </Typography>
+          </Typography>
 
           <Typography variant="caption" className={classes.marginBottom}>
             {post.description}
@@ -77,7 +76,7 @@ const BlogPost = (props) => {
               startIcon={<ThumbUp />}
               onClick={onClickLike}>
               Like
-              </Button>
+            </Button>
 
             <Button
               size="small"
@@ -86,7 +85,7 @@ const BlogPost = (props) => {
               startIcon={<Delete />}
               onClick={onClickDelete}>
               Delete recommendation
-              </Button>
+            </Button>
           </Typography>
 
           <Typography variant="overline">
