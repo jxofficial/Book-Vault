@@ -1,18 +1,28 @@
 import React, { useState, useEffect } from 'react';
 
 import Container from '@material-ui/core/Container';
-
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 import BlogPost from './components/blogPost/BlogPost';
 import Login from './components/Login';
 import BlogPostForm from './components/blogPostForm/BlogPostForm';
-import ErrorNotification from './components/ErrorNotification';
-import SuccessNotification from './components/SuccessNotification';
+import Notification from './components/Notification';
 import Toggleable from './components/Toggleable';
 import Header from './components/Header';
+import FeaturedPost from './components/FeaturedPost';
 
 import loginService from './services/login';
 import blogService from './services/blog';
+
+const FEATURED_POST = {
+  title: 'JavaScript: The Good Parts',
+  author: 'John Duckett',
+  description: 'This authoritative book scrapes away these bad features to reveal a subset of JavaScript that\'s more reliable, readable, and maintainable than the language as a whole--a subset you can use to create truly extensible and efficient code.',
+  url: 'https://www.goodreads.com/book/show/2998152-javascript',
+  bookImageUrl: 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1328834793l/2998152.jpg'
+};
+
 
 const App = () => {
   // allows the parent to access a DOM node or React element outside the render flow
@@ -103,7 +113,7 @@ const App = () => {
   };
 
   const sortBlogPosts = () => {
-    const sortedBlogPosts = [...blogPosts.sort((post1, post2) => post1.likes - post2.likes)];
+    const sortedBlogPosts = [...blogPosts.sort((post1, post2) => post2.likes - post1.likes)];
     setBlogPosts(sortedBlogPosts);
   };
 
@@ -111,7 +121,7 @@ const App = () => {
     return (
       <Container>
         <div>
-          <ErrorNotification message={errorMessage} />
+          <Notification message={errorMessage} type='error' />
         </div>
         <Login login={login} />
       </Container>
@@ -119,38 +129,49 @@ const App = () => {
   } else {
     return (
       <Container>
-        <div>
-          <Header
-            user={user}
-            handleLogout={logout}
-          />
-          <div>
-            <SuccessNotification message={successMessage} />
-          </div>
-          <div>
-            <ErrorNotification message={errorMessage} />
-          </div>
-          <h2>
-            Posts&nbsp;
-            <span><button onClick={sortBlogPosts}>Sort</button></span>
-          </h2>
 
-          {blogPosts.map(post => (
-            <BlogPost
-              post={post}
-              likePost={likePost}
-              deletePost={deletePost}
-              key={post.id}
-            />
-          ))}
+        <Header
+          user={user}
+          handleLogout={logout}
+        />
+        <div>
+          <Notification message={successMessage} type='success' />
+        </div>
+        <div>
+          <Notification message={errorMessage} type='error' />
         </div>
 
+        <FeaturedPost post={FEATURED_POST} />
+
+        <Typography variant="h4">
+          Reads
+        </Typography>
+
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.75rem' }}>
+          <Button
+            variant="outlined" size="small" onClick={sortBlogPosts}>
+            Sort recommendations
+            </Button>
+        </div>
+
+
+
+        {blogPosts.map(post => (
+          <BlogPost
+            post={post}
+            likePost={likePost}
+            deletePost={deletePost}
+            key={post.id}
+          />
+        ))}
+
+
         <div>
-          <Toggleable buttonLabel="New Post" ref={blogFormRef}>
+          <Toggleable buttonLabel="Recommend a book" ref={blogFormRef}>
             <BlogPostForm createPost={createPost} />
           </Toggleable>
         </div>
-      </Container>
+      </Container >
     );
   }
 };

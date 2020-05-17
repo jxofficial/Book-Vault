@@ -1,6 +1,9 @@
 import React, { useState, useImperativeHandle } from 'react';
 import PropTypes from 'prop-types';
 
+import Button from '@material-ui/core/Button';
+import CancelIcon from '@material-ui/icons/Cancel';
+
 // forwardRef attaches the ref from App.js to the mounted Toggleable react element
 // ie ref.current points to the Toggleable react element
 const Toggleable = React.forwardRef((props, ref) => {
@@ -26,13 +29,21 @@ const Toggleable = React.forwardRef((props, ref) => {
   return (
     <>
       <div style={hideWhenVisible}>
-        <button type="button" onClick={toggleVisibility}>
+        <Button variant="outlined" size="small" onClick={toggleVisibility}>
           {props.buttonLabel}
-        </button>
+        </Button>
       </div>
       <div style={showWhenVisible}>
         {props.children}
-        <button type="button" onClick={toggleVisibility}>Cancel</button>
+        <Button
+          variant="contained"
+          color="secondary"
+          size="small"
+          startIcon={<CancelIcon />}
+          onClick={toggleVisibility}
+        >
+          Cancel
+      </Button>
       </div>
     </>
   );

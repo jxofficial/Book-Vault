@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
 
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import SaveIcon from '@material-ui/icons/Save';
+
 const BlogPostForm = ({ createPost }) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
@@ -26,39 +32,51 @@ const BlogPostForm = ({ createPost }) => {
 
   return (
     <>
-      <h2>Create new post</h2>
-      <form onSubmit={submitForm}>
-        <div>
-          <label htmlFor="title">Title: </label>
-          <input
-            type="text"
-            name="title"
-            value={title}
-            onChange={handleTitleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="author">Author: </label>
-          <input
-            type="text"
+      <Typography variant="h4" gutterBottom>
+        Recommend a book
+      </Typography>
+      <Grid>
+        <form onSubmit={submitForm}>
+          <Grid>
+            <TextField
+              required
+              name="title"
+              label="Title"
+              value={title}
+              onChange={handleTitleChange}
+              autoComplete="off"
+            />
+          </Grid>
+          <TextField
+            required
             name="author"
+            label="Author"
             value={author}
             onChange={handleAuthorChange}
+            autoComplete="off"
           />
-        </div>
-        <div>
-          <label htmlFor="url">Url: </label>
-          <input
-            type="text"
-            name="url"
-            value={url}
-            onChange={handleUrlChange}
-          />
-        </div>
-        <button type="submit">
-          Create
-        </button>
-      </form>
+          <Grid>
+            <TextField
+              name="url"
+              label="Url"
+              value={url}
+              onChange={handleUrlChange}
+              autoComplete="off"
+            />
+          </Grid>
+        </form>
+      </Grid>
+      <Grid style={{ margin: '1rem 0' }}>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          size="small"
+          startIcon={<SaveIcon />}
+        >
+          Save
+      </Button>
+      </Grid>
     </>
   );
 };

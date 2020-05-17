@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { spacing } from '@material-ui/system';
 import {
   ExpansionPanel,
   ExpansionPanelSummary,
@@ -19,7 +18,8 @@ import {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: '100%'
+    width: '100%',
+    marginBottom: '1.25rem'
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -34,7 +34,6 @@ const useStyles = makeStyles(theme => ({
   marginBottom: {
     marginBottom: '1.5rem'
   }
-
 }));
 
 
@@ -54,50 +53,48 @@ const BlogPost = (props) => {
 
   return (
     <>
-      <ListItem className={classes.root}>
-        <ExpansionPanel>
-          <ExpansionPanelSummary expandIcon={<ExpandMore />}>
-            <Typography variant="subtitle2">
-              {`${post.title} by ${post.author}`}
-            </Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails className={classes.details}>
-            <Typography variant="subtitle2" gutterBottom>
-              Description
-            </Typography>
-
-            <Typography variant="caption" className={classes.marginBottom}>
-              {post.description}
+      <ExpansionPanel className={classes.root}>
+        <ExpansionPanelSummary expandIcon={<ExpandMore />}>
+          <Typography variant="subtitle2">
+            {`${post.title} by ${post.author}`}
+          </Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails className={classes.details}>
+          <Typography variant="subtitle2" gutterBottom>
+            Description
             </Typography>
 
-            <Typography variant="subtitle2" className={classes.marginBottom}>
-              <span className={classes.marginRight}>{post.likes}</span>
-              <Button className={classes.marginRight}
-                size="small"
-                color="primary"
-                variant="contained"
-                startIcon={<ThumbUp />}
-                onClick={onClickLike}>
-                Like
+          <Typography variant="caption" className={classes.marginBottom}>
+            {post.description}
+          </Typography>
+
+          <Typography variant="subtitle2" className={classes.marginBottom}>
+            <span className={classes.marginRight}>{post.likes}</span>
+            <Button className={classes.marginRight}
+              size="small"
+              color="primary"
+              variant="contained"
+              startIcon={<ThumbUp />}
+              onClick={onClickLike}>
+              Like
               </Button>
 
-              <Button
-                size="small"
-                variant="contained"
-                color="secondary"
-                startIcon={<Delete />}
-                onClick={onClickDelete}>
-                Delete recommendation
+            <Button
+              size="small"
+              variant="contained"
+              color="secondary"
+              startIcon={<Delete />}
+              onClick={onClickDelete}>
+              Delete recommendation
               </Button>
-            </Typography>
+          </Typography>
 
-            <Typography variant="overline">
-              Book recommended by {post.user.name}
-            </Typography>
+          <Typography variant="overline">
+            Book recommended by {post.user.name}
+          </Typography>
 
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-      </ListItem>
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
     </>
   );
 };
