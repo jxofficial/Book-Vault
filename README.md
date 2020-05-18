@@ -1,6 +1,7 @@
 # Book Vault
 
-Book Vault is an app to track and recommend books read. 
+Book Vault is an app to track and recommend books read.
+<br /> 
 mybookvault.herokuapp.com
 
 ### Features
@@ -10,10 +11,10 @@ mybookvault.herokuapp.com
 
 ### Screens
 #### Main 
-[Main Page](/images/main.jpg)
+![Main Page](/images/main.jpg)
 
 #### Login
-[LoginPage](/images/login.jpg)
+![LoginPage](/images/login.jpg)
 
 ### Tech
 Book Vault uses the following to work:
